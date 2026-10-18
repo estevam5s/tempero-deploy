@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tempero Deploy</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Barra de título (draggable) -->
+  <header id="titlebar">
+    <div class="titlebar-left">
+      <div class="app-brand">
+        <div class="app-icon">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="7" fill="#1a73e8"/>
+            <path d="M10 22V12l6-4 6 4v10l-6 4-6-4z" stroke="#fff" stroke-width="1.8" fill="none"/>
+            <circle cx="16" cy="16" r="3" fill="#4fc3f7"/>
+          </svg>
+        </div>
+        <div>
+          <span class="app-name">Tempero Deploy</span>
+          <span class="app-version" id="app-version">v1.0.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="titlebar-center">
+      <button class="tab-btn active" data-tab="projetos">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v2A1.5 1.5 0 0 0 1.5 7h1V5.5A2.5 2.5 0 0 1 5 3h5.5a.5.5 0 0 0 .5-.5v-1A1.5 1.5 0 0 0 9.5 0h-8zM5 5.5A1.5 1.5 0 0 1 6.5 4h8A1.5 1.5 0 0 1 16 5.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 14.5v-9z"/></svg>
+        Projetos
+      </button>
+      <button class="tab-btn" data-tab="dispositivo">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/><path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+        Dispositivo
+      </button>
+      <button class="tab-btn" data-tab="ipa">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707L6.354 9.854z"/></svg>
+        IPA
+      </button>
+      <button class="tab-btn" data-tab="sistema">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/></svg>
+        Sistema
+      </button>
+    </div>
+    <div class="titlebar-right">
+      <div class="device-indicator" id="device-indicator">
+        <span class="dot offline" id="device-dot"></span>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="#8b949e"><path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/></svg>
+        <span id="device-name">Nenhum dispositivo</span>
+        <button class="icon-btn" id="btn-refresh-devices" title="Atualizar">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/><path d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main id="content">
+    <!-- ABA PROJETOS -->
+    <section class="tab-content active" data-tab="projetos">
+      <div class="projetos-layout">
+        <!-- Lista de projetos -->
+        <aside class="sidebar" id="sidebar-projetos">
+          <div class="sidebar-header">
+            <h3>Projetos</h3>
+            <button class="btn btn-sm btn-primary" id="btn-add-projeto">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/></svg>
+              Adicionar
+            </button>
+          </div>
+          <div class="projeto-list" id="projeto-list">
+            <!-- preenchido dinamicamente -->
+          </div>
+        </aside>
+
+        <!-- Detalhe do projeto -->
+        <div class="projeto-detalhe" id="projeto-detalhe">
+          <div class="empty-state" id="empty-projetos">
+            <div class="empty-icon">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <rect x="8" y="14" width="48" height="36" rx="4" stroke="#1a73e8" stroke-width="2.5" fill="none"/>
+                <path d="M8 22h48" stroke="#1a73e8" stroke-width="2"/>
+                <circle cx="14" cy="18" r="2" fill="#e74c3c"/>
+                <circle cx="20" cy="18" r="2" fill="#f39c12"/>
+                <circle cx="26" cy="18" r="2" fill="#2ecc71"/>
+                <path d="M24 35l6-6 6 6" stroke="#4fc3f7" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M30 29v12" stroke="#4fc3f7" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h2>Nenhum projeto selecionado</h2>
+            <p>Adicione um projeto Swift com Package.swift para começar a compilar e instalar no seu iPhone.</p>
+            <button class="btn btn-primary btn-lg" id="btn-add-primeiro">
+              <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/></svg>
+              Adicionar projeto
+            </button>
+          </div>
+
+          <div class="projeto-info hidden" id="projeto-info">
+            <div class="projeto-header">
+              <div class="projeto-titulo">
+                <div class="projeto-icone-grande">
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <rect width="40" height="40" rx="10" fill="#1a1e2e"/>
+                    <path d="M12 28V14l8-5 8 5v14l-8 5-8-5z" stroke="#f97316" stroke-width="2" fill="none"/>
+                    <circle cx="20" cy="20" r="4" fill="#f97316" opacity="0.6"/>
+                  </svg>
+                </div>
+                <div>
+                  <h1 id="proj-nome">—</h1>
+                  <span class="proj-bundle" id="proj-bundle">—</span>
+                </div>
+              </div>
+              <div class="projeto-acoes">
+                <button class="btn btn-ghost" id="btn-abrir-pasta" title="Abrir no Finder">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/></svg>
+                  Finder
+                </button>
+                <button class="btn btn-ghost" id="btn-abrir-terminal" title="Abrir no Terminal">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9zM2.854 4.146a.5.5 0 1 0-.708.708L4.793 7.5 2.146 10.146a.5.5 0 1 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/><path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2z"/></svg>
+                  Terminal
+                </button>
+              </div>
+            </div>
+
+            <div class="proj-stats" id="proj-stats">
+              <div class="stat-card">
+                <span class="stat-label">Arquivos Swift</span>
+                <span class="stat-value" id="stat-arquivos">0</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">xtool.yml</span>
+                <span class="stat-value" id="stat-yml">—</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">Caminho</span>
+                <span class="stat-value stat-path" id="stat-pasta">—</span>
+              </div>
+            </div>
+
+            <div class="build-section">
+              <h3>Compilar e instalar</h3>
+              <div class="build-actions">
+                <button class="btn btn-accent btn-lg" id="btn-build">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"/></svg>
+                  Compilar e instalar
+                </button>
+                <button class="btn btn-secondary" id="btn-build-only">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022z"/></svg>
+                  Só compilar
+                </button>
+                <button class="btn btn-danger hidden" id="btn-cancelar">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H5.707l.853-.854A.5.5 0 0 1 6.914 0h2.172a.5.5 0 0 1 .354.146L10.293 1H12.5a1 1 0 0 1 1 1v1z"/></svg>
+                  Cancelar
+                </button>
+              </div>
+
+              <div class="build-progress hidden" id="build-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <span class="progress-text" id="progress-text">Preparando...</span>
+              </div>
+            </div>
+
+            <div class="arquivos-section">
+              <h3>Arquivos <span class="badge" id="badge-arquivos">0</span></h3>
+              <div class="arquivo-list" id="arquivo-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA DISPOSITIVO -->
+    <section class="tab-content" data-tab="dispositivo">
+      <div class="tab-panel">
+        <div class="panel-header">
+          <h2>Dispositivo conectado</h2>
+          <button class="btn btn-secondary" id="btn-scan-devices">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/><path d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/></svg>
+            Procurar dispositivos
+          </button>
+        </div>
+
+        <div id="device-panel-content">
+          <div class="device-card" id="device-card">
+            <div class="device-visual">
+              <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                  <div class="phone-content" id="phone-content">
+                    <span class="phone-icon">📱</span>
+                    <span class="phone-text" id="phone-text">Conecte um iPhone</span>
+                  </div>
+                </div>
+                <div class="phone-bar"></div>
+              </div>
+            </div>
+            <div class="device-details">
+              <div class="detail-row">
+                <span class="detail-label">Nome</span>
+                <span class="detail-value" id="dev-nome">—</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Conexão</span>
+                <span class="detail-value" id="dev-tipo">—</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">UDID</span>
+                <span class="detail-value mono" id="dev-udid">—</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Status</span>
+                <span class="detail-value" id="dev-status">
+                  <span class="status-badge offline">Desconectado</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-section" id="auth-section">
+            <h3>Conta Apple Developer</h3>
+            <div class="auth-card" id="auth-card">
+              <div class="auth-icon">🔐</div>
+              <div class="auth-info">
+                <span class="auth-label" id="auth-label">Verificando...</span>
+                <span class="auth-email" id="auth-email"></span>
+              </div>
+              <span class="status-badge" id="auth-badge">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA IPA -->
+    <section class="tab-content" data-tab="ipa">
+      <div class="tab-panel">
+        <div class="panel-header">
+          <h2>Instalar IPA</h2>
+          <div class="ipa-header-actions">
+            <button class="btn btn-primary" id="btn-add-ipa">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/></svg>
+              Selecionar IPA
+            </button>
+            <button class="btn btn-secondary" id="btn-gerar-ipa" title="Gerar IPA do projeto atual">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022z"/></svg>
+              Gerar IPA do projeto
+            </button>
+          </div>
+        </div>
+
+        <!-- Zona de drop -->
+        <div class="ipa-drop-zone" id="ipa-drop-zone">
+          <div class="drop-zone-content">
+            <div class="drop-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <rect x="10" y="6" width="28" height="36" rx="4" stroke="#1a73e8" stroke-width="2.5" fill="none"/>
+                <path d="M18 28l6-8 6 8" stroke="#4fc3f7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M24 20v16" stroke="#4fc3f7" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M18 10h12" stroke="#1a73e8" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+              </svg>
+            </div>
+            <p class="drop-text">Arraste um arquivo <strong>.ipa</strong> aqui</p>
+            <p class="drop-hint">ou clique em "Selecionar IPA" acima</p>
+          </div>
+        </div>
+
+        <!-- IPA selecionado -->
+        <div class="ipa-selecionado hidden" id="ipa-selecionado">
+          <div class="ipa-card">
+            <div class="ipa-icon">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                <rect x="6" y="2" width="28" height="36" rx="5" fill="#1a2233" stroke="#1a73e8" stroke-width="2"/>
+                <text x="20" y="24" font-size="11" font-weight="bold" fill="#4fc3f7" text-anchor="middle">.ipa</text>
+              </svg>
+            </div>
+            <div class="ipa-info">
+              <span class="ipa-nome" id="ipa-nome">—</span>
+              <span class="ipa-meta" id="ipa-meta">—</span>
+              <span class="ipa-caminho" id="ipa-caminho">—</span>
+            </div>
+            <div class="ipa-acoes">
+              <button class="btn btn-accent" id="btn-instalar-ipa">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                Instalar no iPhone
+              </button>
+              <button class="btn btn-ghost" id="btn-ipa-pasta" title="Abrir no Finder">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Progresso da instalação IPA -->
+          <div class="build-progress hidden" id="ipa-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="ipa-progress-fill"></div>
+            </div>
+            <span class="progress-text" id="ipa-progress-text">Preparando...</span>
+          </div>
+        </div>
+
+        <!-- Histórico de IPAs -->
+        <div class="ipa-historico" id="ipa-historico">
+          <h3>Recentes <span class="badge" id="badge-ipas">0</span></h3>
+          <div class="ipa-list" id="ipa-list">
+            <div class="empty-ipa-list">Nenhum IPA adicionado ainda</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA SISTEMA -->
+    <section class="tab-content" data-tab="sistema">
+      <div class="tab-panel">
+        <div class="panel-header">
+          <h2>Informações do sistema</h2>
+        </div>
+        <div class="system-grid">
+          <div class="system-card">
+            <div class="system-card-icon" style="background: #1a3a5c">
+              <svg width="24" height="24" viewBox="0 0 16 16" fill="#4fc3f7"><path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022z"/></svg>
+            </div>
+            <div class="system-card-info">
+              <span class="system-label">xtool</span>
+              <span class="system-value" id="sys-xtool">Carregando...</span>
+            </div>
+          </div>
+          <div class="system-card">
+            <div class="system-card-icon" style="background: #3a1a1a">
+              <svg width="24" height="24" viewBox="0 0 16 16" fill="#f97316"><path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115c-.21 0-.416-.02-.616-.058a3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 0 13.027a9.29 9.29 0 0 0 5.026 1.475"/></svg>
+            </div>
+            <div class="system-card-info">
+              <span class="system-label">Swift</span>
+              <span class="system-value" id="sys-swift">Carregando...</span>
+            </div>
+          </div>
+          <div class="system-card">
+            <div class="system-card-icon" style="background: #1a2a1a">
+              <svg width="24" height="24" viewBox="0 0 16 16" fill="#4ade80"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+            </div>
+            <div class="system-card-info">
+              <span class="system-label">Plataforma</span>
+              <span class="system-value" id="sys-plataforma">—</span>
+            </div>
+          </div>
+          <div class="system-card">
+            <div class="system-card-icon" style="background: #2a1a3a">
+              <svg width="24" height="24" viewBox="0 0 16 16" fill="#c084fc"><path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm5.496 6.033a.237.237 0 0 1-.24-.247C9.229 4.59 8.523 4 7.454 4a1.63 1.63 0 0 0-1.702 1.696c0 1.206.776 1.657 1.752 2.007.94.293 1.186.483 1.186.896 0 .461-.36.754-.912.754-.595 0-1.05-.356-1.107-.97a.238.238 0 0 0-.24-.211h-.543a.238.238 0 0 0-.24.257c.082 1.16.876 1.791 2.129 1.791 1.14 0 1.998-.67 1.998-1.79 0-1.003-.641-1.53-1.737-1.868-.876-.27-1.2-.481-1.2-.904 0-.452.37-.755.89-.755.49 0 .85.306.925.772a.236.236 0 0 0 .24.206h.49z"/></svg>
+            </div>
+            <div class="system-card-info">
+              <span class="system-label">Arquitetura</span>
+              <span class="system-value" id="sys-arq">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-section">
+          <h3>Sobre o Tempero Deploy</h3>
+          <p>Ferramenta para compilar e instalar apps Swift nativos no iPhone, usando o xtool como motor.</p>
+          <p class="about-credits">Feito com ❤️ para o Tempero PDV</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Barra de log -->
+  <footer id="footer">
+    <div class="footer-left">
+      <span class="status-text" id="status-text">Pronto</span>
+    </div>
+    <div class="footer-right">
+      <button class="btn btn-ghost btn-sm" id="btn-toggle-log">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/><path d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-11A1.5 1.5 0 0 0 13.5 1h-11z"/></svg>
+        Log
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" id="log-arrow"><path d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/></svg>
+      </button>
+      <button class="btn btn-ghost btn-sm" id="btn-clear-log" title="Limpar log">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/></svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Painel de log -->
+  <div class="log-panel hidden" id="log-panel">
+    <pre id="log-output"></pre>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

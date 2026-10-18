@@ -1,0 +1,13 @@
+{
+  "name": "tempero-deploy",
+  "version": "1.0.0",
+  "description": "Tempero Deploy — Transfira apps Swift para o iPhone via USB",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "dependencies": {
+    "electron": "^44.0.0"
+  }
+}
